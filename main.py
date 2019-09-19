@@ -8,7 +8,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import matplotlib.pyplot as plt
 import pymysql as sql
-
+# bs4 need lxml to work, make sure to install lxml
 
 # Define the class for each draw
 class draw_info:
@@ -426,3 +426,4 @@ if __name__ == '__main__':
     database.update_pool(dated_pool)
     # Disconnect from the database
     database.disconnect()
+    print("Update finished!")

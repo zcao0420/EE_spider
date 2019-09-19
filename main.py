@@ -8,6 +8,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 import matplotlib.pyplot as plt
 import pymysql as sql
+import time
 # bs4 need lxml to work, make sure to install lxml
 
 # Define the class for each draw
@@ -405,6 +406,25 @@ class MYSQL:
             self.conn.commit()
         return
 
+    def update_time(self):
+        delete_first = """
+                    DELETE FROM Update_time LIMIT 1
+                """
+        insert_time = """
+                    INSERT INTO Update_time
+                    (update_time)
+                    VALUES 
+                    (%s)
+                """
+        current_time = str(time.ctime())
+
+        self.cursor.execute(delete_first)
+        self.conn.commit()
+        self.cursor.execute(insert_time,(current_time))
+        self.conn.commit()
+        print('Update time: %s' %current_time)
+        return
+
     def disconnect(self):
         self.conn.close()
         return
@@ -424,6 +444,7 @@ if __name__ == '__main__':
     # Update draw info and pool info
     database.update_draw(to_update)
     database.update_pool(dated_pool)
+    database.update_time()
     # Disconnect from the database
     database.disconnect()
-    print("Update finished!")
+    print("Update finished at " + time.ctime())

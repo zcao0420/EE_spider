@@ -157,23 +157,19 @@ class draw_info:
 
         # The candidates pool
         gen_dist = []
-        sub_dist = []
         # General distribution
-        texts = content.find_all('b')
+        texts = content.find_all('td')
         for text in texts:
             line = text.get_text()
             substring = line.replace(',','')
             gen_dist.append(int(substring))
-        # Detailed distribution
-        texts = content.find_all('i')
-        for text in texts:
-            line = text.get_text()
-            if '-' not in line:
-                substring = line.replace(',', '')
-                sub_dist.append(int(substring))
+        del gen_dist[2]
+        del gen_dist[7]
         # Combine lists
-        self.pool = gen_dist[:2]+sub_dist+gen_dist[-3:-1]
+        self.pool = gen_dist[:-1]
         self.total_candidates = gen_dist[-1]
+        print(self.pool)
+        print(self.total_candidates)
         # Reverse pool
         self.pool.reverse()
 
@@ -385,6 +381,7 @@ class MYSQL:
         if self.table_check(name):
             self.cursor.execute(select)
             table = self.cursor.fetchall()
+            print(table)
             if table[0][0] != pool[0]:
                 self.cursor.execute(delete_first)
                 self.conn.commit()
